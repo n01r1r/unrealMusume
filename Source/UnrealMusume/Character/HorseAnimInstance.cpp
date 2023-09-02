@@ -3,9 +3,9 @@
 #include "GameFramework/Pawn.h"
 #include "Kismet/KismetMathLibrary.h"
 
-void UHorseAnimInstance::NativeInitializeAnimation()
+void UHorseAnimInstance::NativeBeginPlay()
 {
-	Super::NativeInitializeAnimation();
+	Super::NativeBeginPlay();
 
 	Owner = TryGetPawnOwner();
 }

@@ -4,8 +4,6 @@
 #include "Animation/AnimInstance.h"
 #include "RiderAnimInstance.generated.h"
 
-class APawn;
-
 UCLASS()
 class UNREALMUSUME_API URiderAnimInstance : public UAnimInstance
 {
@@ -13,7 +11,7 @@ class UNREALMUSUME_API URiderAnimInstance : public UAnimInstance
 	
 private:
 	UPROPERTY()
-	APawn* Owner;
+	APawn* RidingTarget;
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
@@ -23,6 +21,6 @@ protected:
 	float Direction;
 
 public:
-	virtual void NativeInitializeAnimation() override;
+	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 };

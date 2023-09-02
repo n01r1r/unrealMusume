@@ -23,6 +23,6 @@ protected:
 	float Direction;
 
 public:
-	virtual void NativeInitializeAnimation() override;
+	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 };

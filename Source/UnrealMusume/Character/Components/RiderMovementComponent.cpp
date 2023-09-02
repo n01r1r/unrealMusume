@@ -1,0 +1,17 @@
+#include "RiderMovementComponent.h"
+
+URiderMovementComponent::URiderMovementComponent()
+{
+	PrimaryComponentTick.bCanEverTick = true;
+}
+
+void URiderMovementComponent::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void URiderMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+

@@ -2,15 +2,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "HorseRiderCharacter.generated.h"
+#include "HorseCharacter.generated.h"
 
 UCLASS()
-class UNREALMUSUME_API AHorseRiderCharacter : public ACharacter
+class UNREALMUSUME_API AHorseCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	AHorseRiderCharacter();
+	AHorseCharacter();
 
 protected:
 	virtual void BeginPlay() override;

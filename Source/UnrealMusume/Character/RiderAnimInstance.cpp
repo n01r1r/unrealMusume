@@ -3,24 +3,24 @@
 #include "GameFramework/Pawn.h"
 #include "Kismet/KismetMathLibrary.h"
 
-void URiderAnimInstance::NativeInitializeAnimation()
+void URiderAnimInstance::NativeBeginPlay()
 {
-	Super::NativeInitializeAnimation();
+	Super::NativeBeginPlay();
 
-	Owner = TryGetPawnOwner();
+	GetWorld()->GetTimerManager().SetTimerForNextTick([&] { RidingTarget = TryGetPawnOwner()->GetOwner<APawn>(); });
 }
 
 void URiderAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	if (IsValid(Owner) == false)
+	if (IsValid(RidingTarget) == false)
 	{
 		return;
 	}
 
-	Speed = Owner->GetVelocity().Length();
+	Speed = RidingTarget->GetVelocity().Length();
 
-	FRotator deltaRotator = UKismetMathLibrary::NormalizedDeltaRotator(Owner->GetVelocity().ToOrientationRotator(), Owner->GetControlRotation());
+	FRotator deltaRotator = UKismetMathLibrary::NormalizedDeltaRotator(RidingTarget->GetVelocity().ToOrientationRotator(), RidingTarget->GetControlRotation());
 	Direction = deltaRotator.Yaw;
 }

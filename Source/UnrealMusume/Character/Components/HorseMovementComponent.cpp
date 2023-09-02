@@ -1,4 +1,4 @@
-#include "HorseRiderMovementComponent.h"
+#include "HorseMovementComponent.h"
 
 #include "GameFramework/Character.h"
 
@@ -7,7 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
-UHorseRiderMovementComponent::UHorseRiderMovementComponent()
+UHorseMovementComponent::UHorseMovementComponent()
 	: SpeedRandomValueChangeTime(1.f)
 	, RotationRandomValueChangeTime(3.f)
 	, RotationRandomValue(0.f)
@@ -15,12 +15,25 @@ UHorseRiderMovementComponent::UHorseRiderMovementComponent()
 	, RotationCorrectionMinYawValue(10.f)
 {
 	PrimaryComponentTick.bCanEverTick = true;
+
 }
 
-void UHorseRiderMovementComponent::BeginPlay()
+void UHorseMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	Init();
+}
 
+void UHorseMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	Movement(DeltaTime);
+}
+
+void UHorseMovementComponent::Init_Implementation()
+{
 	TArray<AActor*> splineActors;
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("Spline"), splineActors);
 
@@ -55,10 +68,8 @@ void UHorseRiderMovementComponent::BeginPlay()
 		0.f);
 }
 
-void UHorseRiderMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UHorseMovementComponent::Movement_Implementation(float DeltaTime)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	if (IsValid(TrackSplineComponent) == false || IsValid(OwingCharacter) == false)
 	{
 		return;
@@ -69,7 +80,7 @@ void UHorseRiderMovementComponent::TickComponent(float DeltaTime, ELevelTick Tic
 	OwingCharacter->AddMovementInput(OwingCharacter->GetActorForwardVector(), 1.f);
 }
 
-void UHorseRiderMovementComponent::RotateToSpline(float _DeltaTime)
+void UHorseMovementComponent::RotateToSpline(float _DeltaTime)
 {
 	FVector owingPawnLocation = OwingCharacter->GetActorLocation();
 
@@ -89,9 +100,9 @@ void UHorseRiderMovementComponent::RotateToSpline(float _DeltaTime)
 	OwingCharacter->SetActorRotation(targetRotation, ETeleportType::TeleportPhysics);
 }
 
-float UHorseRiderMovementComponent::CalcRotationLerpSpeed(const FRotator& _LookAtRotation)
+float UHorseMovementComponent::CalcRotationLerpSpeed(const FRotator& _LookAtRotation)
 {
-	// 스플라인에서 많이 벗어나면 회전각에 보정치를 추가해 더 빠르게 회전하도록 처리
+	// 스플라인에서 많이 벗어날수록 회전각에 가중치를 추가해 더 빠르게 회전하도록 처리
 
 	FRotator deltaRotation = UKismetMathLibrary::NormalizedDeltaRotator(_LookAtRotation, OwingCharacter->GetActorRotation());
 	float deltaYaw = FMath::Abs(deltaRotation.Yaw);
