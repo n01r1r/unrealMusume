@@ -3,6 +3,7 @@
 URiderMovementComponent::URiderMovementComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bStartWithTickEnabled = false;
 }
 
 void URiderMovementComponent::BeginPlay()
