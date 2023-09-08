@@ -1,6 +1,7 @@
 #include "RiderCharacter.h"
 
 #include "HorseCharacter.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 ARiderCharacter::ARiderCharacter()
@@ -16,8 +17,10 @@ void ARiderCharacter::BeginPlay()
 
 	if (IsValid(RidingTarget))
 	{
-		AttachToActor(RidingTarget, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		AttachToActor(RidingTarget, FAttachmentTransformRules::SnapToTargetIncludingScale);
 		SetOwner(RidingTarget);
+
+		GetCapsuleComponent()->IgnoreActorWhenMoving(RidingTarget, true);
 	}
 }
 

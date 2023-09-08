@@ -1,11 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "MusumeMovementComponent.h"
 #include "RiderMovementComponent.generated.h"
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class UNREALMUSUME_API URiderMovementComponent : public UActorComponent
+class UNREALMUSUME_API URiderMovementComponent : public UMusumeMovementComponent
 {
 	GENERATED_BODY()
 
