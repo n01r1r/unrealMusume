@@ -4,7 +4,6 @@
 #include "HorseMovementComponent.h"
 #include "ReverseHorseMovementComponent.generated.h"
 
-class ARiderCharacter;
 class UReverseRiderMovementComponent;
 
 UCLASS()
@@ -13,9 +12,6 @@ class UNREALMUSUME_API UReverseHorseMovementComponent : public UHorseMovementCom
 	GENERATED_BODY()
 	
 protected:
-	UPROPERTY(EditAnywhere, Category = "Reverse")
-	ARiderCharacter* RiderCharacter;
-
 	UPROPERTY(EditAnywhere, Category = "Reverse")
 	float ThrowTime;
 

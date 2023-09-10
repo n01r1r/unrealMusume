@@ -52,12 +52,12 @@ void UReverseHorseMovementComponent::ThrowRider()
 
 		FVector impulse = tangentDirection * ThrowForwardImpulse;
 		impulse.Z = ThrowUpImpulse;
-		ReverseRiderMovementComponent->BeThrown(impulse);
+		ReverseRiderMovementComponent->BeThrown(impulse * SpeedRate);
 
 		IsChangeStart = true;
 		ClearRandomTimer();
 
-		CharacterMovementComponent->MaxWalkSpeed = ChangeMoveSpeed;
+		CharacterMovementComponent->MaxWalkSpeed = ChangeMoveSpeed * SpeedRate;
 	}
 }
 

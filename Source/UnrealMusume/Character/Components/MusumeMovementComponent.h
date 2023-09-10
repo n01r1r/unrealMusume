@@ -30,6 +30,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Speed")
 	float SpeedRandomValueChangeTime;
 
+	float SpeedRate;
+
 	FTimerHandle SpeedRandomValueTimerHandle;
 
 protected:
@@ -75,4 +77,7 @@ protected:
 private:
 	void RotateToSpline(float _DeltaTime);
 	float CalcRotationLerpSpeed(const FRotator& _LookAtRotation);
+
+public:
+	void SetSpeedRate(float _SpeedRate);
 };

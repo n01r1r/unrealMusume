@@ -9,6 +9,7 @@
 
 UMusumeMovementComponent::UMusumeMovementComponent()
 	: SpeedRandomValueChangeTime(1.f)
+	, SpeedRate(1.f)
 	, RotationRandomValueChangeTime(3.f)
 	, RotationRandomValue(0.f)
 	, RotationLerpSpeed(5.f)
@@ -78,7 +79,7 @@ void UMusumeMovementComponent::StartRandomTimer()
 	GetWorld()->GetTimerManager().SetTimer(SpeedRandomValueTimerHandle, [&]
 		{
 			float randomSpeed = FMath::FRandRange(SpeedRandomValueRange.X, SpeedRandomValueRange.Y);
-			CharacterMovementComponent->MaxWalkSpeed = randomSpeed;
+			CharacterMovementComponent->MaxWalkSpeed = randomSpeed * SpeedRate;
 		},
 		SpeedRandomValueChangeTime,
 		true,
@@ -130,3 +131,12 @@ float UMusumeMovementComponent::CalcRotationLerpSpeed(const FRotator& _LookAtRot
 	return lerpSpeed;
 }
 
+void UMusumeMovementComponent::SetSpeedRate(float _SpeedRate)
+{
+	SpeedRate = _SpeedRate;
+
+	if (CharacterMovementComponent)
+	{
+		CharacterMovementComponent->MaxWalkSpeed *= _SpeedRate;
+	}
+}
