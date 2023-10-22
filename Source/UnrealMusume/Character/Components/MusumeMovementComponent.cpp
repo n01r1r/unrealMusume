@@ -1,7 +1,5 @@
 #include "MusumeMovementComponent.h"
 
-#include "GameFramework/Character.h"
-
 #include "Components/SplineComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -80,6 +78,7 @@ void UMusumeMovementComponent::StartRandomTimer()
 		{
 			float randomSpeed = FMath::FRandRange(SpeedRandomValueRange.X, SpeedRandomValueRange.Y);
 			CharacterMovementComponent->MaxWalkSpeed = randomSpeed * SpeedRate;
+			CharacterMovementComponent->MaxFlySpeed = randomSpeed * SpeedRate;
 		},
 		SpeedRandomValueChangeTime,
 		true,
@@ -138,5 +137,6 @@ void UMusumeMovementComponent::SetSpeedRate(float _SpeedRate)
 	if (CharacterMovementComponent)
 	{
 		CharacterMovementComponent->MaxWalkSpeed *= _SpeedRate;
+		CharacterMovementComponent->MaxFlySpeed *= _SpeedRate;
 	}
 }
