@@ -16,12 +16,12 @@ void ARacingGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//ProcessSetMovementComponents();
-	//
-	//for (UWorldEventBase* worldEvent : WorldEvents)
-	//{
-	//	worldEvent->Start(MusumeMovementComponents);
-	//}
+	ProcessSetMovementComponents();
+	
+	for (UWorldEventBase* worldEvent : WorldEvents)
+	{
+		worldEvent->Start(MusumeMovementComponents);
+	}
 }
 
 void ARacingGameMode::ProcessSetMovementComponents()
