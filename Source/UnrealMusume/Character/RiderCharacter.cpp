@@ -12,11 +12,12 @@ ARiderCharacter::ARiderCharacter()
 void ARiderCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 
+	//기존 버젼에서는 RidingTarget을 에디터에서 직접 설정해줌으로 여기서 실행
 	if (IsValid(RidingTarget))
 	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+
 		AttachToActor(RidingTarget, FAttachmentTransformRules::SnapToTargetIncludingScale);
 		SetOwner(RidingTarget);
 
@@ -28,4 +29,17 @@ void ARiderCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ARiderCharacter::AttachRiderToHorse()
+{	
+	//스폰 형식에서는 BP에서 RidingTarget을 설정해줌으로 여기서 실행
+	if (IsValid(RidingTarget))
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+		AttachToActor(RidingTarget, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		SetOwner(RidingTarget);
+
+		GetCapsuleComponent()->IgnoreActorWhenMoving(RidingTarget, true);
+	}
 }

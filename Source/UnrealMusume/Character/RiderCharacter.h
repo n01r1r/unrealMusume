@@ -12,7 +12,7 @@ class UNREALMUSUME_API ARiderCharacter : public ACharacter
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadWrite, EditInstanceOnly, meta = (AllowPrivateAccess = "true"))
 	AHorseCharacter* RidingTarget;
 
 public:
@@ -21,4 +21,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void AttachRiderToHorse();
 };

@@ -29,7 +29,7 @@ void URiderAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	if (IsValid(RiderCharacter) == false)
+	if (IsValid(RiderCharacter) == false || IsValid(HorseCharacter) == false)
 	{
 		return;
 	}
