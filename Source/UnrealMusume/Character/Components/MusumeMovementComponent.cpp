@@ -12,9 +12,15 @@ UMusumeMovementComponent::UMusumeMovementComponent()
 	, RotationRandomValue(0.f)
 	, RotationLerpSpeed(5.f)
 	, RotationCorrectionMinYawValue(10.f)
+	, IsHorseMovement(true)
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
+	static ConstructorHelpers::FObjectFinder<UCurveFloat> horseMoveCurveFloat_Banana(TEXT("/Script/Engine.CurveFloat'/Game/Musume/FloatCurve/HorseMoveCurveFloat_Banana.HorseMoveCurveFloat_Banana'"));
+	if (horseMoveCurveFloat_Banana.Succeeded())
+	{
+		HorseMoveCurveFloat_Banana = horseMoveCurveFloat_Banana.Object;
+	}
 }
 
 void UMusumeMovementComponent::BeginPlay()
@@ -22,12 +28,25 @@ void UMusumeMovementComponent::BeginPlay()
 	Super::BeginPlay();
 	
 	Init();
+
+
+	check(HorseMoveCurveFloat_Banana != nullptr);
+	FOnTimelineFloat HorseMoveCallback;
+	FOnTimelineEventStatic HorseMoveFinishedCallback;
+
+	HorseMoveCallback.BindUFunction(this, FName("HorseMove_Banana"));
+	HorseMoveFinishedCallback.BindUFunction(this, FName("HorseMoveFinished_Banana"));
+
+	HorseMoveCurveFTimeline_Banana.AddInterpFloat(HorseMoveCurveFloat_Banana, HorseMoveCallback);
+	HorseMoveCurveFTimeline_Banana.SetTimelineFinishedFunc(HorseMoveFinishedCallback);
+	HorseMoveCurveFTimeline_Banana.SetTimelineLength(2.0f);
 }
 
 void UMusumeMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	HorseMoveCurveFTimeline_Banana.TickTimeline(DeltaTime);
 	Movement(DeltaTime);
 }
 
@@ -57,9 +76,11 @@ void UMusumeMovementComponent::Movement_Implementation(float DeltaTime)
 		return;
 	}
 
-	RotateToSpline(DeltaTime);
-
-	OwingCharacter->AddMovementInput(OwingCharacter->GetActorForwardVector(), 1.f);
+	if (IsHorseMovement)
+	{
+		RotateToSpline(DeltaTime);
+		OwingCharacter->AddMovementInput(OwingCharacter->GetActorForwardVector(), 1.f);
+	}	
 }
 
 void UMusumeMovementComponent::StartRandomTimer()
@@ -139,4 +160,49 @@ void UMusumeMovementComponent::SetSpeedRate(float _SpeedRate)
 		CharacterMovementComponent->MaxWalkSpeed *= _SpeedRate;
 		CharacterMovementComponent->MaxFlySpeed *= _SpeedRate;
 	}
+}
+
+void UMusumeMovementComponent::BananaEvent()
+{
+	if (IsValid(GetOwner()) == false)
+	{
+		return;
+	}
+
+	FirstHorseForwardVec = GetOwner()->GetActorForwardVector();
+
+	//바나나에 미끄러지는 중엔 Movement 일시중지
+	IsHorseMovement = false;
+
+	// 회전 랜덤 타이머 설정
+	GetWorld()->GetTimerManager().SetTimer(HorseRotatorTimerHandle_Banana, [&]
+		{
+			FRotator newRotator = FRotator(
+				GetOwner()->GetActorRotation().Pitch,
+				GetOwner()->GetActorRotation().Yaw + 30.0f,
+				GetOwner()->GetActorRotation().Roll);
+
+			GetOwner()->SetActorRotation(newRotator);
+		},
+		0.02f,
+		true,
+		0.f);
+
+	HorseMoveCurveFTimeline_Banana.PlayFromStart();
+}
+
+void UMusumeMovementComponent::HorseMove_Banana(float _val)
+{
+	FVector newVector = FVector(
+		GetOwner()->GetActorLocation() +
+		FirstHorseForwardVec * _val * 10.0f);
+	
+	GetOwner()->SetActorLocation(newVector);
+}
+
+void UMusumeMovementComponent::HorseMoveFinished_Banana()
+{
+	HorseMoveCurveFTimeline_Banana.SetNewTime(0.0f);
+	GetWorld()->GetTimerManager().ClearTimer(HorseRotatorTimerHandle_Banana);
+	IsHorseMovement = true;
 }

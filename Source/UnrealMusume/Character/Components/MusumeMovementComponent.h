@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/TimeLineComponent.h"
 #include "MusumeMovementComponent.generated.h"
 
 class ACharacter;
@@ -82,4 +83,26 @@ private:
 
 public:
 	void SetSpeedRate(float _SpeedRate);
+
+//바나나 밟았을때 관련 이벤트
+private:
+	FTimerHandle HorseRotatorTimerHandle_Banana;
+
+	FTimeline HorseMoveCurveFTimeline_Banana;
+
+	UCurveFloat* HorseMoveCurveFloat_Banana;
+
+	FVector FirstHorseForwardVec;
+
+	bool IsHorseMovement;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void BananaEvent();
+
+	UFUNCTION()
+	void HorseMove_Banana(float _val);
+
+	UFUNCTION()
+	void HorseMoveFinished_Banana();
 };
