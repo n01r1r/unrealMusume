@@ -16,9 +16,14 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Flying")
 	float ZInterpSpeed;
 
+	bool IsFlyingOn;
+
 public:
 	UFlyingHorseMovementComponent();
 
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+protected:
+	virtual void ExecuteFunction_Implementation(bool _IsFunctionOn);
 };

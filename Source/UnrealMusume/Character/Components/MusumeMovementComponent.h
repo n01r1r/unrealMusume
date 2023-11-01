@@ -74,6 +74,12 @@ protected:
 
 	virtual void Movement_Implementation(float DeltaTime);
 
+	//말 기능 온오프
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void ExecuteFunction(bool _IsFunctionOn);
+
+	virtual void ExecuteFunction_Implementation(bool _IsFunctionOn){}
+
 	void StartRandomTimer();
 	void ClearRandomTimer();
 
